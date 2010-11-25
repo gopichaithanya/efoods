@@ -1,0 +1,11 @@
+<tr>
+	<c:choose>
+		<c:when test = "${loggedIn == false}">
+			<td><a href="login.do">Login</a></td>
+		</c:when>
+		<c:otherwise>
+			<td>Welcome ${account.accountName}</td>
+		</c:otherwise>
+	</c:choose>
+	<td><a href="cart.do">Cart</a></td>
+</tr>
