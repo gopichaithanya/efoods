@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root 
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:x="http://java.sun.com/jsp/jstl/xml"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	
+	
+	version="2.0">
+    <jsp:directive.page language="java"
+        contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" />
+    <jsp:text>
+        <![CDATA[ <?xml version="1.0" encoding="ISO-8859-1" ?> ]]>
+    </jsp:text>
+    <jsp:text>
+        <![CDATA[ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> ]]>
+    </jsp:text>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Shopping Cart</title>
+<link rel = "stylesheet" href = "styles/styles.css" type = "text/css" />
+
+</head>
+<body>
+
+	<h2>Shopping Cart</h2>
+	
+<form method = "POST" action = "main.do?mod=true">	
+
+<table border="1">
+	<tr>
+	<th>ID</th><th>Product Name</th><th>Quantity</th><th>Price per Item </th><th>Total Price</th><th>Modify</th>
+	</tr>
+
+<c:set var="overAllTotal" value="${0}" scope="session"  />
+<!-- <c:set var="overAllTotal" value="${overAllTotal + 10}" /> 
+<c:out value="${overAllTotal}"/>
+-->
+
+<c:forEach var="cartItem" items="${cartItems}">
+	<tr>
+    <td>${cartItem.product.productID}</td><td>${cartItem.product.productName}</td><td>${cartItem.quantity}</td><td>${cartItem.product.unitPrice} CAD</td><td>${cartItem.quantity * cartItem.product.unitPrice}</td>
+    <td><input type="text" name="${cartItem.product.productID}" maxlength = "5" size ="5"/></td> 
+	</tr>
+	<c:set var="overAllTotal" value="${overAllTotal + (cartItem.quantity * cartItem.product.unitPrice)}" />  	
+  </c:forEach>
+</table>
+
+<p><h4>Overall Total: </h4>
+<c:out value="${overAllTotal}" />
+
+</p>
+<br/>
+<input type = "submit" name = "modifyQuantity" value = "Update Quantitiy" />
+</form>
+
+
+<form method="post" action="main.do" >
+	<input type = "submit" name = "continueShopping" value = "Continue Shopping" /> 
+</form>
+
+
+<form method = "POST" action = "views/viewCheckout.jspx">
+		<!--<input type = "hidden" name = "intendedTarget" value = "viewCheckout.jspx"/>-->
+		<input type = "submit" name = "addbtn" value = "Check Out"/>
+</form>
+
+
+
+
+</body>
+</html>
+</jsp:root>
