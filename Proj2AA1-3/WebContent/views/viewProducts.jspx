@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root  
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:x="http://java.sun.com/jsp/jstl/xml"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	version="2.0">
+    <jsp:directive.page language="java"
+        contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" />
+    <jsp:text>
+        <![CDATA[ <?xml version="1.0" encoding="ISO-8859-1" ?> ]]>
+    </jsp:text>
+    <jsp:text>
+        <![CDATA[ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> ]]>
+    </jsp:text>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Products</title>
+<link rel = "stylesheet" href = "styles/styles.css" type = "text/css" />-->
+</head>
+<body>
+	<table name = "layout">
+		<tr>
+			<c:choose>
+				<c:when test = "${loggedIn == false}">
+					<td><a href="login.do">Login</a></td>
+				</c:when>
+				<c:otherwise>
+					<td>Welcome ${account.name} <a href="logout.do">Logout</a></td>
+				</c:otherwise>
+			</c:choose>
+			<td><a href="Category.do">Categories</a></td>
+			<td><a href="cart.do">Cart</a></td>
+		</tr>
+		
+		<tr>
+			<td colspan = "3"><h1>Products Under ${category.categoryName}</h1>	
+			Enter the product info you want to add to the cart!
+			<p style="color:red;">${inputError}</p>
+			<p><a href="category.do">Continue Shopping: Return to Categories</a></p></td>
+		</tr>
+		<tr>
+			<td colspan = "3">
+				<form method = "POST" action = "Category.do?q=${category.categoryID}">
+					<table border="1">
+						<tr>
+							<th>ID</th><th>Name</th><th>Quantity per Unit</th><th>Price</th><th>Quantity</th>
+						</tr>
+						
+						<c:forEach var="prod" items="${productsList}">
+							<tr>
+			    				<td>${prod.productID}</td><td>${prod.productName}</td>
+			    				<td>${prod.quantityPerUnit}</td><td>${prod.unitPrice} CAD</td>
+			    				<td><input type = "number" name = "CartInput${prod.productID}" value="0" maxlength = "5" size ="5" /></td> 
+							</tr>
+			 			 </c:forEach>
+					</table>
+					<input type = "submit" name = "addBtn" value = "Add to Cart"/>
+				</form>
+			</td>
+			<td name = "cartCell">
+				<table name = "cartOutline" border="1">
+					<tr><td> The Cart:</td></tr>
+					<tr><td>
+						<c:choose>
+							<c:when test="${cart.isEmpty}">
+								Cart is Empty
+							</c:when>
+							<c:otherwise>
+								<table name = "cart">
+									<tr>
+										<th>ID</th><th>Name</th><th>Quantity per Unit</th><th>Price</th><th>Quantity</th>
+									</tr>
+									<c:forEach var="prod" items="${cart.products}">
+										<tr>
+						    				<td>${prod.productID}</td><td>${prod.productName}</td>
+						    				<td>${prod.quantityPerUnit}</td><td>${prod.unitPrice} CAD</td>
+						    				<td>${prod.quantity }</td> 
+										</tr>
+						 			 </c:forEach>
+						 			 <tr>
+						 			 	<td>Total without Tax:</td>
+						 			 	<td>${cart.totalNoTax}</td>
+						 			 </tr>
+						 			 <tr>
+						 			 	<td>HST at ${cart.HST}%:</td>
+						 			 	<td>${cart.tax}</td>
+						 			 </tr>
+						 			 <tr>
+						 			 	<td>Total with Tax:</td>
+						 			 	<td>${cart.totalWithTax}</td>
+						 			 </tr>
+						 			 <tr>
+						 			 	<td>Shipping Cost:</td>
+						 			 	<td>${cart.shippingCost}</td>
+						 			 </tr>
+						 			 <tr>
+						 			 	<td>Grand Total:</td>
+						 			 	<td>${cart.grandTotal}</td>
+						 			 </tr>
+						 			 <tr><p><a href="cart.do">Go to Cart to modify</a></p></tr>
+						 			 <tr><p><a href="checkout.do">Checkout</a></p></tr>
+								</table>
+							</c:otherwise>
+						</c:choose>
+					</td></tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
+</jsp:root>

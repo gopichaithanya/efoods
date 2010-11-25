@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<jsp:root  
+	xmlns:jsp="http://java.sun.com/JSP/Page" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:x="http://java.sun.com/jsp/jstl/xml"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	version="2.0">
+    <jsp:directive.page language="java"
+        contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" />
+    <jsp:text>
+        <![CDATA[ <?xml version="1.0" encoding="ISO-8859-1" ?> ]]>
+    </jsp:text>
+    <jsp:text>
+        <![CDATA[ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> ]]>
+    </jsp:text>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Confirmation</title>
+</head>
+<body>
+<table name = "layout">
+		<tr>
+			<c:choose>
+				<c:when test = "${loggedIn == false}">
+					<td><a href="login.do">Login</a></td>
+				</c:when>
+				<c:otherwise>
+					<td>Welcome ${account.name} <a href="logout.do">Logout</a></td>
+				</c:otherwise>
+			</c:choose>
+			<td><a href="Category.do">Categories</a></td>
+			<td><a href="cart.do">Cart</a></td>
+		</tr>
+		<tr> <td colspan = "3">
+			You are logged as: <b>${account.name}</b>! Please confirm the following purchase
+			
+			<table name = "cart" border ="1">
+				<tr>
+					<th>ID</th><th>Name</th><th>Quantity per Unit</th><th>Price</th><th>Quantity</th>
+				</tr>
+				<c:forEach var="prod" items="${cart.products}">
+					<tr>
+			  				<td>${prod.productID}</td><td>${prod.productName}</td>
+			  				<td>${prod.quantityPerUnit}</td><td>${prod.unitPrice} CAD</td>
+			  				<td>${prod.quantity }</td> 
+					</tr>
+				</c:forEach>
+				 <tr>
+				 	<td>Total without Tax:</td>
+				 	<td colspan="4">${cart.totalNoTax}</td>
+				 </tr>
+				 <tr>
+				 	<td>HST at ${cart.HST}%:</td>
+				 	<td colspan="4">${cart.tax}</td>
+				 </tr>
+				 <tr>
+				 	<td>Total with Tax:</td>
+				 	<td colspan="4">${cart.totalWithTax}</td>
+				 </tr>
+				 <tr>
+				 	<td>Shipping Cost:</td>
+				 	<td colspan="4">${cart.shippingCost}</td>
+				 </tr>
+				 <tr>
+				 	<td>Grand Total:</td>
+				 	<td  colspan="4">${cart.grandTotal}</td>
+				 </tr>
+			</table>
+			
+			<form method="post" action="Confirmation.do" >
+				<input type = "submit" name = "Confirm" value = "Confirm" /> 
+			</form>
+			
+			<form method="post" action="Categories.do" >
+				<input type = "submit" name = "continueShopping" value = "Continue Shopping" /> 
+			</form>
+		</td></tr>
+	</table>
+
+</body>
+</html>
+</jsp:root>
