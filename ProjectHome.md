@@ -1,0 +1,29 @@
+The Business Model
+
+The Foods R Us Company is a consolidating retailer. It specializes in selling exotic food items but it does not stock inventory. Instead, it takes purchase orders (P/O's) from its clients, consolidates them, and then procures them from business partners who stock the items and provide them wholesale; i.e. the partners do not venture into the retail market. In this business model, Foods R Us makes money by benefiting from volume discounts (due to consolidation) and by marking up wholesale prices. The latter factor, however, can backfire: if the markup is too high, the Company will not be competitive, and if it is too low, it becomes vulnerable to market fluctuations and this may lead to a net loss (by under-selling the suppliers). The Company has to deal with, and attempt to mitigate, this risk, and hence the need for sophisticated eCommerce technologies.
+Overview of the System
+
+The sought system consists of two parts, one is B2C and the other B2B. Part 1 enables the Company's (human) clients to browse its catalog, add items to a shopping cart, and place orders. This part culminates in several P/O files stored on disk. Part 2 is non-interactive and runs as a scheduled job on a nightly or weekly basis depending on volume. Its input is the set of P/O files created by Part 1. It consolidates them by forming the union of the P/O's such that each item appears only once with a quantity equal to the sum of its quantities in all the P/O's. After creating the combined order, this part of the system connects to several web services and determines who supplies each item and at what price, optimizes the procurement, and places one or more order.
+Analysis of Part 1 (B2C)
+Use Case: A client makes a fresh visit
+
+The relevant URL is red.cse.yorku.ca:port/eFoods. The Catalog servlet displays the catalog of the Company. It is up to you to determine how this display is done based on how much time you want to spend on this task and on how versatile you want your webapp to be. For example, you can at one extreme display all the items in one page; you can show the hierarchy by displaying only the categories and then the selected items; you can enable both direct and category-based access; you can have a search facility; you can have an express order form for those who know the item numbers; you can enable clients to bookmark pages; etc. Whatever you do, the client must be able to see the item's number, name, quantity per unit, and price. The client must also able to add an item to an initially empty shopping cart.
+Use Case: A client adds an item to the shopping cart
+
+The Cart servlet must react by displaying the content of the shopping cart. The display should be tabular with one item per row. The table columns display the number, name, and price of each item in a read-only fashion. In addition, there should be a writable column for the desired quantity and a read-only one for the extended price. The display should also indicate a total, PST and GST (based on Ontario), a shipping cost ($5 that is waived for orders of $100 or more before taxes), and a grand total. The page has three buttons: Update (to refresh the calculated fields after editing a quantity), Continue Shopping, and Checkout. Notice that if the entered quantity of an item is zero then it should be removed from the cart. You need to also handle the case of negative or non-numeric quantities.
+Use Case: A client logs in
+
+Upon checkout or at anytime, a login form (normally transmitted over https) is served prompting for the client name, shipping address, and payment details. We are not going to switch to https in this project. Instead, we will continue to use http and we will assume that all clients have already established accounts with the Company, i.e. each client has a profile that contains the shipping address and payment preferences. Hence, the login form prompts only for the client's account number and password.
+Use Case: A client checks out
+
+Upon checkout, the controller must ensure the client is logged in and must then display a confirmation screen followed by an acknowledgement that the the order has been accepted and is being processed. A URL that the client can visit at any time to view the created P/O must also be provided. See the next use case for details.
+Use Case: A client visits the URL of a P/O
+
+Upon confirmation of a P/O, the system stores its content in an XML file based on the PO.xsd schema. The name of the P/O file is derived from the account number of the client and the P/O number (a per-client serial number that starts at 1). For example, the the 3rd P/O of account number 1234B555, is: po1234B55503.xml. Since this is an XML file, it needs to be transformed to XHTML before the client can see it. Note that this use case does not involve authentication.
+
+In addition to the above use cases, it is recommended that your site supports the following uses: the ability to view the shopping cart from the catalog screen (i.e. without having to add an item); the ability to checkout from the catalog screen.
+Analysis of Part 2 (B2B)
+
+This off-line, non-interactive system is ran nightly when the web server is down. It consolidates all the P/Os of the day to generate a procurement order: a list of all the needed items and the overall quantity needed for each. Next, it connects to the web services of three major Canadian wholesalers, one in Toronto, one in Vancouver, and one in Halifax. For each procurement item, it determines who has it, chooses the one with the lowest price, and places an order. No shipping charges or taxes are in scope here. When procurement is completed, it generates a procurement report (HTML) detailing the ordered items, the chosen wholesaler of each, and the winning bid price.
+
+Placing an order requires a key. A unique key will be given to each team.
